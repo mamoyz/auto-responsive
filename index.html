@@ -31,6 +31,10 @@
     <div class="left">
       <textarea id="input"></textarea><br />
       <div>
+        <label for="">Remove Duplicate Lines?</label>
+        <input type="checkbox" name="remove" id="remove" checked />
+      </div>
+      <div>
         <label for="">Base Width</label>
         <input type="number" name="base" id="baseWidth" value="1920" />
       </div>
@@ -62,6 +66,8 @@
         var baseWidth = $("#baseWidth").val();
         var minWidth = $("#minWidth").val();
         var maxWidth = $("#maxWidth").val();
+        var remove = $("#remove").prop("checked");
+        console.log(remove);
         // var mmm = home.match(/(\d+(\.\d+)?)+(px)/g);
         var lines = home.match(/(.*;)+\n/g);
         for (var j = 0; j < lines.length; j++) {
@@ -75,7 +81,9 @@
               home = home.replace(raw, vw);
             }
           } else {
-            home = home.replace(lineContent, "");
+            if (remove) {
+              home = home.replace(lineContent, "");
+            }
           }
           if (lines.length - j == 1) {
             home =
