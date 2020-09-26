@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Responsive by Mamo YZ</title>
+    <style>
+      textarea {
+        width: 100%;
+        height: 60vh;
+      }
+      .left {
+        width: 50%;
+        float: left;
+      }
+      .right {
+        width: 50%;
+        float: right;
+      }
+      input,
+      button {
+        padding: 10px;
+      }
+      div {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Auto Responsive CSS Generator | by Mamo YZ</h1>
+    <div class="left">
+      <textarea id="input"></textarea><br />
+      <div>
+        <label for="">Base Width</label>
+        <input type="number" name="base" id="baseWidth" value="1920" />
+      </div>
+      <div>
+        <label for="">@media min-width:</label>
+        <input type="number" name="base" id="minWidth" value="1024" />
+        <label for="">and max-width:</label>
+        <input type="number" name="base" id="maxWidth" value="1919" />
+      </div>
+      <div>
+        <button id="doIt">Make it Responsive</button>
+        <button id="reset">Reset</button>
+      </div>
+    </div>
+    <div class="right">
+      <textarea id="output" readonly></textarea>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+    <script>
+      $("#input").val(
+        ".flavor-heading {\n  text-align: center;\n  position: relative;\n  .hex {\n    width: 1000px;\n    position: absolute;\n    left: -810px;\n    z-index: 5;\n  }\n  h1 {\n    font: 400 62px/70px $font-lemon;\n    color: #000;\n    margin-bottom: 80px;\n    margin-top: 30px;\n    text-transform: uppercase;\n  }\n}\n"
+      );
+      $("#reset").click(function (e) {
+        $("textarea").val("");
+      });
+      $("#doIt").click(function (e) {
+        e.preventDefault();
+        var home = $("#input").val();
+        var baseWidth = $("#baseWidth").val();
+        var minWidth = $("#minWidth").val();
+        var maxWidth = $("#maxWidth").val();
+        // var mmm = home.match(/(\d+(\.\d+)?)+(px)/g);
+        var lines = home.match(/(.*;)+\n/g);
+        for (var j = 0; j < lines.length; j++) {
+          var lineContent = lines[j];
+          var mmm = lineContent.match(/(\d+(\.\d+)?)+(px)/g);
+          if (mmm) {
+            for (var i = 0; i < mmm.length; i++) {
+              var raw = mmm[i];
+              var px = raw.replace("px", "");
+              var vw = theround((px * 100) / baseWidth) + "vw";
+              home = home.replace(raw, vw);
+            }
+          } else {
+            home = home.replace(lineContent, "");
+          }
+          if (lines.length - j == 1) {
+            home =
+              "@media (min-width:" +
+              minWidth +
+              "px) and (max-width:" +
+              maxWidth +
+              "px){\n" +
+              home;
+            home = home + "\n}";
+            $("#output").val(home);
+          }
+        }
+      });
+      $("#baseWidth").on("change keyup", function () {
+        var thisVal = $(this).val();
+        $("#maxWidth").val(thisVal - 1);
+      });
+      function theround(n) {
+        if (n > 0) {
+          return Math.round((n + Number.EPSILON) * 100) / 100;
+        }
+      }
+    </script>
+  </body>
+</html>
